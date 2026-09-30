@@ -1,5 +1,7 @@
 # LifeDrop — Blood Bank Management System
 
+[![GitHub Repo](https://img.shields.io/badge/GitHub-lifedrop--blood--bank--system-blue?logo=github)](https://github.com/pulkitjoshi/lifedrop-blood-bank-system)
+
 A full-stack blood bank management system: **Angular** frontend + **Node.js/Express** REST API backend, with a JSON-file data store (no database server required).
 
 ## Features
@@ -21,8 +23,6 @@ bbsystem/
 ## Prerequisites
 
 - Node.js 18+ and npm
-
-> This code was written in an environment without Node.js installed, so it has **not** been run/compiled here. Follow the steps below on a machine with Node to install dependencies and start it.
 
 ## 1. Run the backend
 
