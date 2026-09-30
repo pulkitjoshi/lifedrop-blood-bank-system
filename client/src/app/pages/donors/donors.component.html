@@ -1,0 +1,101 @@
+<header class="topbar">
+  <h1>Donors</h1>
+  <div class="topbar-actions">
+    <button class="btn" (click)="openAdd()">+ Add Donor</button>
+  </div>
+</header>
+
+<div class="content">
+  <div class="toolbar">
+    <input type="text" placeholder="Search by name or phone..." #searchInput (input)="search.set(searchInput.value)">
+    <select #groupSelect (change)="filterGroup.set(groupSelect.value)">
+      <option value="">All Blood Groups</option>
+      <option *ngFor="let g of bloodGroups" [value]="g">{{ g }}</option>
+    </select>
+    <select #eligSelect (change)="filterEligible.set(eligSelect.value)">
+      <option value="">All Donors</option>
+      <option value="eligible">Eligible Only</option>
+      <option value="not">Not Eligible</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th><th>Age</th><th>Gender</th><th>Blood Group</th><th>Phone</th>
+          <th>Last Donation</th><th>Total Donations</th><th>Status</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of filtered()">
+          <td>{{ d.name }}</td>
+          <td>{{ d.age }}</td>
+          <td>{{ d.gender }}</td>
+          <td><span class="badge bg-group">{{ d.bloodGroup }}</span></td>
+          <td>{{ d.phone }}</td>
+          <td>{{ d.lastDonationDate ? (d.lastDonationDate | date:'mediumDate') : '—' }}</td>
+          <td>{{ d.totalDonations }}</td>
+          <td>
+            <span class="badge eligible" *ngIf="d.eligible">Eligible</span>
+            <span class="badge not-eligible" *ngIf="!d.eligible">In {{ d.eligibleInDays }}d</span>
+          </td>
+          <td class="row-actions">
+            <button class="btn small secondary" (click)="openEdit(d)">Edit</button>
+            <button class="btn small secondary" (click)="remove(d)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="empty-state" *ngIf="filtered().length === 0">No donors found.</p>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showModal()" (click)="$event.target === $event.currentTarget && closeModal()">
+  <div class="modal">
+    <h2>{{ editingDonor() ? 'Edit Donor' : 'Add Donor' }}</h2>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="form-row">
+        <label>Full Name</label>
+        <input type="text" formControlName="name">
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label>Age</label>
+          <input type="number" formControlName="age" min="18" max="65">
+        </div>
+        <div class="form-row">
+          <label>Gender</label>
+          <select formControlName="gender">
+            <option>Male</option>
+            <option>Female</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Blood Group</label>
+        <select formControlName="bloodGroup">
+          <option *ngFor="let g of bloodGroups" [value]="g">{{ g }}</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Phone</label>
+        <input type="tel" formControlName="phone">
+      </div>
+      <div class="form-row">
+        <label>Email (optional)</label>
+        <input type="email" formControlName="email">
+      </div>
+      <div class="form-row">
+        <label>Address (optional)</label>
+        <input type="text" formControlName="address">
+      </div>
+      <p class="field-error" *ngIf="formError()">{{ formError() }}</p>
+      <div class="modal-actions">
+        <button type="button" class="btn secondary" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn">{{ editingDonor() ? 'Save Changes' : 'Add Donor' }}</button>
+      </div>
+    </form>
+  </div>
+</div>

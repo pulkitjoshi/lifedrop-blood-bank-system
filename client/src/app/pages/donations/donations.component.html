@@ -1,0 +1,26 @@
+<header class="topbar">
+  <h1>Donation Log</h1>
+  <div class="topbar-actions">
+    <button class="btn" (click)="goRecordDonation()">+ Record Donation</button>
+  </div>
+</header>
+
+<div class="content">
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Donor</th><th>Blood Group</th><th>Units</th><th>Center</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let d of donations()">
+          <td>{{ d.date | date:'mediumDate' }}</td>
+          <td>{{ d.donorName }}</td>
+          <td><span class="badge bg-group">{{ d.bloodGroup }}</span></td>
+          <td>{{ d.units }}</td>
+          <td>{{ d.center }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="empty-state" *ngIf="donations().length === 0">No donations recorded yet.</p>
+  </div>
+</div>

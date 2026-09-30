@@ -1,0 +1,23 @@
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-icon">🩸</span>
+      <span class="brand-name">LifeDrop</span>
+    </div>
+    <nav class="nav">
+      <a *ngFor="let item of navItems" class="nav-btn" [routerLink]="item.path" routerLinkActive="active">
+        <span class="ic">{{ item.icon }}</span>{{ item.label }}
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="ghost-btn" (click)="theme.toggle()">{{ themeLabel }}</button>
+      <button class="ghost-btn danger" (click)="resetData()">⟲ Reset demo data</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+<div class="toast" *ngIf="toast.visible()" [ngClass]="toast.type()">{{ toast.message() }}</div>

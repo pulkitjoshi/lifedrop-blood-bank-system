@@ -1,0 +1,15 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "lifedrop-client",
+      "url": "http://localhost:4200",
+      "port": 4200
+    },
+    {
+      "name": "lifedrop-server",
+      "url": "http://localhost:3000",
+      "port": 3000
+    }
+  ]
+}

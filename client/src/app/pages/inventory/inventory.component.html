@@ -1,0 +1,80 @@
+<header class="topbar">
+  <h1>Blood Inventory</h1>
+  <div class="topbar-actions">
+    <button class="btn" (click)="openDonationModal()">+ Record Donation</button>
+  </div>
+</header>
+
+<div class="content">
+  <div class="inv-grid">
+    <div class="inv-card" [class.low]="isLow(g)" *ngFor="let g of bloodGroups">
+      <div class="grp">{{ g }}</div>
+      <div class="units">{{ unitsFor(g) }}</div>
+      <div class="lbl">units available</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-header-row">
+      <h2>Blood Batches</h2>
+      <select #filterSelect (change)="batchFilter.set(filterSelect.value)">
+        <option value="">All Blood Groups</option>
+        <option *ngFor="let g of bloodGroups" [value]="g">{{ g }}</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Batch ID</th><th>Blood Group</th><th>Units</th><th>Collected</th><th>Expires</th><th>Status</th><th></th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let b of filteredBatches()">
+            <td>{{ b.id }}</td>
+            <td><span class="badge bg-group">{{ b.bloodGroup }}</span></td>
+            <td>{{ b.units }}</td>
+            <td>{{ b.collectedDate | date:'mediumDate' }}</td>
+            <td>{{ b.expiryDate | date:'mediumDate' }}</td>
+            <td><span class="badge" [ngClass]="b.status">{{ statusLabel[b.status] }}</span></td>
+            <td>
+              <button class="btn small secondary" *ngIf="b.status === 'expired' || b.units === 0" (click)="removeBatch(b)">Remove</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="empty-state" *ngIf="filteredBatches().length === 0">No batches recorded.</p>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" *ngIf="showModal()" (click)="$event.target === $event.currentTarget && closeModal()">
+  <div class="modal">
+    <h2>Record Donation</h2>
+    <form [formGroup]="form" (ngSubmit)="submit(false)">
+      <div class="form-row">
+        <label>Donor</label>
+        <select formControlName="donorId">
+          <option *ngFor="let d of donors()" [value]="d.id">{{ d.name }} — {{ d.bloodGroup }}{{ d.eligible ? '' : ' (not yet eligible)' }}</option>
+        </select>
+      </div>
+      <div class="form-grid-2">
+        <div class="form-row">
+          <label>Units</label>
+          <input type="number" formControlName="units" min="1" max="4">
+        </div>
+        <div class="form-row">
+          <label>Date</label>
+          <input type="date" formControlName="date" [max]="today">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Collection Center</label>
+        <input type="text" formControlName="center">
+      </div>
+      <p class="field-error" *ngIf="formError()">{{ formError() }}</p>
+      <div class="modal-actions">
+        <button type="button" class="btn secondary" (click)="closeModal()">Cancel</button>
+        <button type="submit" class="btn">Save Donation</button>
+      </div>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+<header class="topbar">
+  <h1>Dashboard</h1>
+  <div class="topbar-actions"></div>
+</header>
+
+<div class="content" *ngIf="data() as d">
+  <div class="cards">
+    <div class="stat-card">
+      <div class="stat-label">Total Donors</div>
+      <div class="stat-value">{{ d.stats.totalDonors }}</div>
+      <div class="stat-sub">{{ d.stats.eligibleDonors }} eligible now</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Blood Units Available</div>
+      <div class="stat-value">{{ d.stats.totalUnits }}</div>
+      <div class="stat-sub">across {{ bloodGroups.length }} groups</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Pending Requests</div>
+      <div class="stat-value">{{ d.stats.pendingRequests }}</div>
+      <div class="stat-sub">{{ d.stats.totalRequests }} total requests</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Total Donations</div>
+      <div class="stat-value">{{ d.stats.totalDonations }}</div>
+      <div class="stat-sub">{{ d.stats.expiredBatches }} batches expired</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <h2>Inventory by Blood Group</h2>
+      <div class="bars">
+        <div class="bar-row" *ngFor="let g of bloodGroups">
+          <span>{{ g }}</span>
+          <div class="bar-track"><div class="bar-fill" [style.width.%]="(d.inventory[g] / maxUnits()) * 100"></div></div>
+          <span>{{ d.inventory[g] }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>Alerts</h2>
+      <ul class="alert-list">
+        <li *ngFor="let a of d.alerts" [class.ok]="a.ok">{{ a.text }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Recent Activity</h2>
+    <ul class="activity-list">
+      <li *ngIf="d.activity.length === 0">No activity yet.</li>
+      <li *ngFor="let a of d.activity">
+        <span [innerHTML]="a.text"></span>
+        <span>{{ timeAgo(a.ts) }}</span>
+      </li>
+    </ul>
+  </div>
+</div>
